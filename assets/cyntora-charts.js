@@ -124,18 +124,53 @@
     var canvas = document.getElementById(canvasId);
     if (!canvas) return null;
 
+    var dualAxis = !!spec.dual_axis;
     var datasets = (spec.series || []).map(function (s, i) {
       var color = s.color || (i === 0 ? P.current : P.previous);
-      return applyDataset({
+      var ds = applyDataset({
         label: s.label,
         data: s.values,
         borderColor: color,
         backgroundColor: color,
         borderDash: s.dashed ? [4, 4] : []
       }, color);
+      // Per-dataset format makes hover show the right unit on the right axis.
+      if (s.format) ds._cyntoraFormat = s.format;
+      if (s.currency) ds._cyntoraCurrency = s.currency;
+      if (dualAxis) ds.yAxisID = i === 0 ? 'y' : 'y1';
+      return ds;
     });
 
-    var fmt = pickFormatter(spec);
+    var fmtMain = pickFormatter(spec);
+    var fmtRight = dualAxis && spec.series && spec.series[1]
+      ? pickFormatter({ format: spec.series[1].format || spec.format, currency: spec.series[1].currency || spec.currency })
+      : fmtMain;
+
+    var perDatasetTooltip = {
+      backgroundColor: '#222',
+      titleFont: { size: 12, weight: '600' },
+      bodyFont: { size: 12 },
+      padding: 8,
+      callbacks: {
+        label: function (ctx) {
+          var v = ctx.parsed.y != null ? ctx.parsed.y : ctx.parsed;
+          var ds = ctx.dataset || {};
+          var localFmt = ds._cyntoraFormat
+            ? pickFormatter({ format: ds._cyntoraFormat, currency: ds._cyntoraCurrency || spec.currency })
+            : fmtMain;
+          var name = ds.label ? ds.label + ': ' : '';
+          return name + localFmt(v);
+        }
+      }
+    };
+
+    var scales = dualAxis
+      ? {
+          x: { grid: { display: false, drawBorder: false }, ticks: { color: P.axisColor, maxRotation: 0, autoSkip: true, autoSkipPadding: 12, font: { size: 11 } } },
+          y:  { position: 'left',  beginAtZero: spec.zero !== false, grid: { color: P.grid, drawBorder: false }, ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtMain(v); } } },
+          y1: { position: 'right', beginAtZero: spec.zero !== false, grid: { display: false }, ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtRight(v); } } }
+        }
+      : commonScales({ zero: spec.zero !== false, yFormatter: fmtMain });
 
     return new Chart(canvas, {
       type: 'line',
@@ -144,9 +179,9 @@
         interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: { display: spec.legend !== false, position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
-          tooltip: tooltip(fmt)
+          tooltip: perDatasetTooltip
         },
-        scales: commonScales({ zero: spec.zero !== false, yFormatter: fmt }),
+        scales: scales,
         elements: { line: { borderJoinStyle: 'round' } }
       }
     });
@@ -229,21 +264,25 @@
       return applyDataset({
         label: s.label,
         data: s.values,
-        borderColor: color
+        borderColor: color,
+        pointHoverRadius: 5
       }, color);
     });
+
+    var fmt = pickFormatter(spec);
 
     return new Chart(canvas, {
       type: 'line',
       data: { labels: spec.labels, datasets: datasets },
       options: {
+        interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: { display: false },
-          tooltip: tooltip(fmtNumber)
+          tooltip: tooltip(fmt)
         },
         scales: {
           x: { display: true, grid: { display: false }, ticks: { color: P.axisColor, font: { size: 9 }, maxTicksLimit: 4 } },
-          y: { display: true, grid: { color: P.grid, drawBorder: false }, ticks: { color: P.axisColor, font: { size: 9 }, maxTicksLimit: 4 } }
+          y: { display: true, grid: { color: P.grid, drawBorder: false }, ticks: { color: P.axisColor, font: { size: 9 }, maxTicksLimit: 4, callback: function (v) { return fmt(v); } } }
         }
       }
     });

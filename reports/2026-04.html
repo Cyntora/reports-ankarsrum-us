@@ -11,12 +11,22 @@
 </head>
 <body>
 
-<div class="period-switcher">
-  <label for="period">Period:</label>
-  <select id="period" data-period-switcher data-current="2026-04" data-index-url="index.json" disabled>
-    <option value="2026-04.html" selected>April 2026</option>
-  </select>
-</div>
+<nav class="report-nav" data-section-nav>
+  <div class="report-nav__inner">
+    <div class="report-nav__group">
+      <label for="section-jump">Sektion:</label>
+      <select id="section-jump" data-section-jump>
+        <option value="">Översikt</option>
+      </select>
+    </div>
+    <div class="report-nav__group">
+      <label for="period">Period:</label>
+      <select id="period" data-period-switcher data-current="2026-04" data-index-url="index.json" disabled>
+        <option value="2026-04.html" selected>April 2026</option>
+      </select>
+    </div>
+  </div>
+</nav>
 
 
 <section class="page cover">
@@ -50,8 +60,10 @@
     <div>April 2026</div>
     <div>Previous: April 2025</div>
   </div>
-</div>  <div class="section">
-  <div class="section-title">Google Analytics 4</div>
+</div>  <div class="section" id="section-ga4_overview" data-section-id="ga4_overview" data-section-title="Google Analytics 4">
+  <div class="section-title">
+<img class="section-title__icon" src="../assets/icons/ga4.svg" alt="">    <span>Google Analytics 4</span>
+  </div>
 
 
     <div class="band">Overview</div>
@@ -408,8 +420,10 @@
     <div>April 2026</div>
     <div>Previous: April 2025</div>
   </div>
-</div>  <div class="section">
-  <div class="section-title">Google Ads</div>
+</div>  <div class="section" id="section-google_ads" data-section-id="google_ads" data-section-title="Google Ads">
+  <div class="section-title">
+<img class="section-title__icon" src="../assets/icons/google-ads.svg" alt="">    <span>Google Ads</span>
+  </div>
 
 
     <div class="band">SEM</div>
@@ -477,7 +491,7 @@
     </span>
   </div>
   <div class="chart-wrap">
-    <canvas id="ads-spend-5" data-cyntora='{"currency": "USD", "format": "currency", "kind": "line", "labels": ["04-01", "04-02", "04-03", "04-04", "04-05", "04-06", "04-07", "04-08", "04-09", "04-10", "04-11", "04-12", "04-13", "04-14", "04-15", "04-16", "04-17", "04-18", "04-19", "04-20", "04-21", "04-22", "04-23", "04-24", "04-25", "04-26", "04-27", "04-28", "04-29", "04-30"], "series": [{"color": "#1f4e4a", "label": "Kostnad", "values": [790.647, 894.0951, 1414.1953, 1065.5528, 818.3176, 1163.0736, 963.0432, 825.9243, 1175.0362, 1044.5957, 1138.301, 1232.4128, 936.9297, 871.1052999999999, 915.3699, 984.7376, 770.2936, 1252.3034, 1072.8667, 819.5382, 915.2816, 991.6873999999999, 1081.78, 968.4232, 957.4996, 1067.743, 698.4765, 983.2212, 971.2124999999999, 784.5857000000001]}, {"color": "#b9d2cf", "label": "Konv.v\u00e4rde", "values": [69725.5527, 49247.345700000005, 98064.7313, 44051.08060000001, 59231.120200000005, 89294.949, 85370.20370000001, 69435.3593, 86107.26830000001, 58408.273199999996, 58717.1869, 97335.9921, 63446.0494, 77523.1243, 114991.36140000001, 81774.275, 70801.52930000001, 50456.26640000001, 61464.7718, 69747.35519999999, 17006.1578, 85736.1338, 44151.5886, 31080.6939, 47622.8422, 88408.3928, 33538.858, 39244.965800000005, 134479.3051, 43122.612]}]}'></canvas>
+    <canvas id="ads-spend-5" data-cyntora='{"currency": "USD", "dual_axis": true, "format": "currency", "kind": "line", "labels": ["1 Apr", "2 Apr", "3 Apr", "4 Apr", "5 Apr", "6 Apr", "7 Apr", "8 Apr", "9 Apr", "10 Apr", "11 Apr", "12 Apr", "13 Apr", "14 Apr", "15 Apr", "16 Apr", "17 Apr", "18 Apr", "19 Apr", "20 Apr", "21 Apr", "22 Apr", "23 Apr", "24 Apr", "25 Apr", "26 Apr", "27 Apr", "28 Apr", "29 Apr", "30 Apr"], "series": [{"color": "#1f4e4a", "currency": "USD", "format": "currency", "label": "Kostnad", "values": [790.65, 894.1, 1414.2, 1065.55, 818.32, 1163.07, 963.04, 825.92, 1175.04, 1044.6, 1138.3, 1232.41, 936.93, 871.11, 915.37, 984.74, 770.29, 1252.3, 1072.87, 819.54, 915.28, 991.69, 1081.78, 968.42, 957.5, 1067.74, 698.48, 983.22, 971.21, 784.59]}, {"color": "#b9d2cf", "currency": "USD", "format": "currency", "label": "Konv.v\u00e4rde", "values": [69725.55, 49247.35, 98064.73, 44051.08, 59231.12, 89294.95, 85370.2, 69435.36, 86107.27, 58408.27, 58717.19, 97335.99, 63446.05, 77523.12, 114991.36, 81774.27, 70801.53, 50456.27, 61464.77, 69747.36, 17006.16, 85736.13, 44151.59, 31080.69, 47622.84, 88408.39, 33538.86, 39244.97, 134479.31, 43122.61]}]}'></canvas>
   </div>
 </div>
 <div class="band">Top Campaigns</div>
@@ -566,7 +580,7 @@
 </div>
 
 
-<div class="takeaway">Pmax-kampanjen står för huvuddelen av investeringen och konverteringarna; Branding USA har högst CTR men lägre konverteringseffekt.</div>
+<div class="takeaway">Kostnaden ökade 52 procent och konverteringsvolymen 159 procent, vilket ger en starkare effekt per investerad krona.</div>
 </div>
 </section>
 <section class="page">
@@ -577,8 +591,10 @@
     <div>April 2026</div>
     <div>Previous: April 2025</div>
   </div>
-</div>  <div class="section">
-  <div class="section-title">WooCommerce</div>
+</div>  <div class="section" id="section-commerce" data-section-id="commerce" data-section-title="WooCommerce">
+  <div class="section-title">
+<img class="section-title__icon" src="../assets/icons/woocommerce.svg" alt="">    <span>WooCommerce</span>
+  </div>
 
 
     <div class="band">Sales</div>
@@ -678,11 +694,11 @@
 </div><div class="next-steps">
   <h2>Vad vi gör härnäst</h2>
   <ul>
-      <li>Vi kommer att skala kampanjen Pmax: shopping vår 2024 som driver merparten av Google Ads-konverteringarna och behåller stark volym.</li>
-      <li>Vi optimerar landningssidorna /us och /us/product-category/stand-mixers för att hålla kvar de nya besökarna längre och sänka avvisningsfrekvensen.</li>
-      <li>Vi följer upp prestandan på Branding USA-kampanjen som genererar hög CTR men begränsat konverteringsvärde, och justerar målgruppsinställningarna.</li>
-      <li>Vi testar nya annonsvarianter för Sök: Ankarsrum US för att lyfta CTR från nuvarande nivåer.</li>
-      <li>Vi fortsätter bevaka WooCommerce-trenden och rapporterar när orderkvot per besökare når nästa mätpunkt.</li>
+      <li>Vi kommer att skala den shopping-baserade Performance Max-strukturen som driver merparten av konverteringsvolymen.</li>
+      <li>Vi optimerar de mest besökta produktkategori-sidorna för att hålla kvar de nya besökarna längre och sänka avvisningsfrekvensen.</li>
+      <li>Vi följer upp varumärkeskampanjen som har hög CTR men begränsat direkt konverteringsvärde, och justerar målgruppsinställningarna.</li>
+      <li>Vi testar nya annonsvarianter för sökkampanjerna för att lyfta CTR från nuvarande nivåer.</li>
+      <li>Vi fortsätter bevaka WooCommerce-trenden och rapporterar när orderkvoten per besökare når nästa mätpunkt.</li>
   </ul>
 </div>
 
