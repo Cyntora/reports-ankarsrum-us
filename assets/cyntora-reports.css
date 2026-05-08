@@ -75,7 +75,9 @@ html, body {
 }
 
 /* Long strings (URL paths, campaign names with hyphens) shouldn't push
-   their parent past the viewport edge. */
+   their parent past the viewport edge. The donut-row legend is excluded
+   on purpose — it's a 1-fr column inside a constrained card and would
+   otherwise wrap city names like "Stockholm" character-by-character. */
 .data-table td,
 .summary-block p,
 .next-steps li,
@@ -84,10 +86,14 @@ html, body {
 .cover h1,
 .cover .intro,
 .section-title,
-.page-header .meta,
-.donut-row .legend .name {
+.page-header .meta {
   overflow-wrap: anywhere;
   word-break: break-word;
+}
+.donut-row .legend .name {
+  /* Allow word boundaries to wrap, but not mid-word. */
+  overflow-wrap: break-word;
+  word-break: keep-all;
 }
 
 /* `<a>` tags inside copy must wrap - common offender on mobile. */
@@ -401,6 +407,16 @@ a { overflow-wrap: anywhere; word-break: break-word; }
   font-weight: 600;
   text-align: right;
 }
+
+/* When 3 donuts share a row (Detaljerad statistik), each card is too
+   narrow for the donut + legend side-by-side. Stack chart over legend so
+   long city names render readably. */
+.card-grid--3 .donut-row {
+  grid-template-columns: 1fr;
+  gap: 12px;
+  text-align: center;
+}
+.card-grid--3 .donut-row .legend { text-align: left; }
 
 /* ---------- Data table --------------------------------------------------- */
 
