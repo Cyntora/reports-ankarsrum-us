@@ -57,7 +57,25 @@
     return s + (Math.round(v * 100) / 100).toLocaleString('sv-SE');
   }
 
+  function fmtDuration(seconds) {
+    if (seconds == null) return '-';
+    var s = Math.round(seconds);
+    var h = Math.floor(s / 3600);
+    var m = Math.floor((s % 3600) / 60);
+    var sec = s % 60;
+    if (h) return h + 'h ' + m + 'm ' + sec + 's';
+    return m + 'm ' + sec + 's';
+  }
+
+  function pickFormatter(spec) {
+    if (spec.format === 'currency') return function (v) { return fmtCurrency(v, spec.currency || 'SEK'); };
+    if (spec.format === 'duration') return fmtDuration;
+    if (spec.format === 'percent')  return function (v) { return (v * 100).toFixed(1) + '%'; };
+    return fmtNumber;
+  }
+
   function commonScales(opts) {
+    var yTickFmt = (opts && opts.yFormatter) || fmtNumber;
     return {
       x: {
         grid: { display: false, drawBorder: false },
@@ -66,7 +84,7 @@
       y: {
         beginAtZero: !!(opts && opts.zero),
         grid: { color: P.grid, drawBorder: false },
-        ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtNumber(v); } }
+        ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return yTickFmt(v); } }
       }
     };
   }
@@ -117,19 +135,18 @@
       }, color);
     });
 
-    var fmt = spec.format === 'currency'
-      ? function (v) { return fmtCurrency(v, spec.currency || 'SEK'); }
-      : fmtNumber;
+    var fmt = pickFormatter(spec);
 
     return new Chart(canvas, {
       type: 'line',
       data: { labels: spec.labels, datasets: datasets },
       options: {
+        interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: { display: spec.legend !== false, position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
           tooltip: tooltip(fmt)
         },
-        scales: commonScales({ zero: spec.zero !== false }),
+        scales: commonScales({ zero: spec.zero !== false, yFormatter: fmt }),
         elements: { line: { borderJoinStyle: 'round' } }
       }
     });
@@ -150,19 +167,18 @@
       };
     });
 
-    var fmt = spec.format === 'currency'
-      ? function (v) { return fmtCurrency(v, spec.currency || 'SEK'); }
-      : fmtNumber;
+    var fmt = pickFormatter(spec);
 
     return new Chart(canvas, {
       type: 'bar',
       data: { labels: spec.labels, datasets: datasets },
       options: {
+        interaction: { mode: 'index', intersect: false },
         plugins: {
           legend: { display: spec.legend === true, position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
           tooltip: tooltip(fmt)
         },
-        scales: commonScales({ zero: true })
+        scales: commonScales({ zero: true, yFormatter: fmt })
       }
     });
   };
@@ -172,6 +188,8 @@
     if (!canvas) return null;
 
     var colors = spec.colors || P.donut;
+
+    var fmt = pickFormatter(spec);
 
     return new Chart(canvas, {
       type: 'doughnut',
@@ -188,9 +206,15 @@
         cutout: '70%',
         plugins: {
           legend: { display: false },
-          tooltip: tooltip(spec.format === 'currency'
-            ? function (v) { return fmtCurrency(v, spec.currency || 'SEK'); }
-            : fmtNumber)
+          tooltip: {
+            backgroundColor: '#222',
+            padding: 8,
+            callbacks: {
+              label: function (ctx) {
+                return ctx.label + ': ' + fmt(ctx.parsed);
+              }
+            }
+          }
         }
       }
     });
