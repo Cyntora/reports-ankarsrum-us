@@ -68,7 +68,30 @@ html, body {
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Defensive: never allow the page itself to scroll horizontally. Every
+     wide element (tables, charts) must scroll inside its own container. */
+  max-width: 100%;
+  overflow-x: hidden;
 }
+
+/* Long strings (URL paths, campaign names with hyphens) shouldn't push
+   their parent past the viewport edge. */
+.data-table td,
+.summary-block p,
+.next-steps li,
+.takeaway,
+.card__note,
+.cover h1,
+.cover .intro,
+.section-title,
+.page-header .meta,
+.donut-row .legend .name {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+/* `<a>` tags inside copy must wrap - common offender on mobile. */
+a { overflow-wrap: anywhere; word-break: break-word; }
 
 .page {
   max-width: 1080px;
@@ -540,27 +563,49 @@ html, body {
   margin: 8px 0 16px;
 }
 
-/* ---------- Responsive (mobile / tablet) ------------------------------- */
+/* ---------- Responsive (mobile / tablet) -------------------------------
+   Breakpoints chosen to match real device classes:
+     ≥ 1200  desktop / large laptop      (no overrides needed)
+     1024    laptop / iPad landscape    (slight tightening)
+      900    small laptop / iPad split   (3-col → 2-col)
+      720    iPad portrait, large phone  (sticky nav rows still inline)
+      560    phone landscape / large    (full single-column)
+      400    standard phones             (compact)
+      340    iPhone SE 1, narrow Galaxy  (tighter type)
+*/
 
-/* On tablets and smaller laptops, drop the asymmetric icon-strip and
-   3-column grids to a calmer 2-column layout, and make the multi-market
-   3-column grid switch to two columns. */
-@media (max-width: 980px) {
+/* Laptop / iPad landscape */
+@media (max-width: 1024px) {
   :root { --pad-page: 24px; }
+  .market-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* iPad portrait + small laptops: drop 3-col grids to 2-col and tighten the
+   asymmetric icon-strip layout. */
+@media (max-width: 900px) {
   .card-grid--3 { grid-template-columns: repeat(2, 1fr); }
   .card-grid--asym { grid-template-columns: 1fr 1fr; }
   .card-grid--asym .card--icon { display: none; }
-  .market-grid { grid-template-columns: repeat(2, 1fr); }
   .donut-row { grid-template-columns: 180px 1fr; gap: 16px; }
   .chart-wrap { height: 220px; }
   .chart-wrap--tall { height: 280px; }
+}
+
+/* Large phones / phone landscape: keep the sticky nav inline but tighten
+   spacing, single-column the multi-market grid, and let donuts stack. */
+@media (max-width: 720px) {
+  :root { --pad-page: 18px; }
+  .market-grid { grid-template-columns: 1fr; }
+  .donut-row { grid-template-columns: 1fr; gap: 14px; text-align: center; }
+  .donut-row .legend { text-align: left; }
+  .data-table { font-size: 11.5px; }
 }
 
 /* Phones (≤ iPhone Pro Max width). Stack everything to a single column,
    keep the sticky nav as a dropdown (do NOT switch to a hamburger), and
    shrink fonts/spacing so the report stays readable without zooming.
    Tables overflow horizontally rather than squishing columns. */
-@media (max-width: 640px) {
+@media (max-width: 560px) {
   :root {
     --pad-page: 16px;
     --pad-card: 14px 14px;
@@ -656,17 +701,32 @@ html, body {
   .trend { font-size: 10px; padding: 1px 5px; }
 }
 
-/* Extra-small phones (~ ≤ iPhone SE / Galaxy A-series). Avoid horizontal
-   overflow on the page itself; only tables scroll. */
-@media (max-width: 380px) {
-  html, body { font-size: 12.5px; }
-  .page { padding: 12px 10px; }
-  .section-title { font-size: 16px; }
+/* Standard phones (iPhone SE 2/3, iPhone Pro). Compact type but still
+   comfortable. */
+@media (max-width: 400px) {
+  html, body { font-size: 13px; }
+  .page { padding: 14px 12px; }
+  .section-title { font-size: 17px; }
   .card__value { font-size: 22px; }
   .card__value--big { font-size: 26px; }
-  .chart-wrap { height: 180px; }
-  .chart-wrap--tall  { height: 220px; }
-  .chart-wrap--short { height: 140px; }
+  .chart-wrap { height: 190px; }
+  .chart-wrap--tall  { height: 230px; }
+  .chart-wrap--short { height: 150px; }
+}
+
+/* Extra-small phones (iPhone SE 1, narrow Android). Tighter type; no
+   page overflow — only tables scroll. */
+@media (max-width: 340px) {
+  html, body { font-size: 12.5px; }
+  .page { padding: 12px 10px; }
+  .section-title { font-size: 15px; }
+  .card__value { font-size: 20px; }
+  .card__value--big { font-size: 24px; }
+  .chart-wrap { height: 170px; }
+  .chart-wrap--tall  { height: 210px; }
+  .chart-wrap--short { height: 130px; }
+  .band { font-size: 12.5px; }
+  .data-table { min-width: 460px; }
 }
 
 /* ---------- Print ------------------------------------------------------- */
