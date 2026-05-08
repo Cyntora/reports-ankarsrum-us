@@ -173,6 +173,7 @@ html, body {
 }
 .cover .footer .property { margin-bottom: 4px; }
 .cover .footer .url { font-size: 14px; }
+.cover .footer .fx-note { font-size: 11px; color: var(--c-text-muted); margin-top: 16px; font-style: italic; }
 
 /* ---------- Page header (recurs on every page after the cover) ------------ */
 
