@@ -410,6 +410,16 @@ html, body {
   color: var(--c-text-muted);
 }
 
+/* ---------- Source attribution caption ---------------------------------- */
+
+.source-attr {
+  font-size: 11px;
+  color: var(--c-text-muted);
+  text-align: right;
+  padding: 4px 2px 12px;
+  font-style: italic;
+}
+
 /* ---------- Insight callout (per-section takeaway) ----------------------- */
 
 .takeaway {
