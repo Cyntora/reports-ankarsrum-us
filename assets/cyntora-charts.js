@@ -1,0 +1,253 @@
+/* Cyntora Reports - Chart.js helpers
+ *
+ * Loads after Chart.js v4 from CDN. Provides four constructor functions:
+ *   cyntoraLine(canvasId, spec)
+ *   cyntoraBar(canvasId, spec)
+ *   cyntoraDonut(canvasId, spec)
+ *   cyntoraInlineSparkline(canvasId, spec)
+ *
+ * Each `spec` is the JSON the renderer embedded next to the canvas. The
+ * helpers apply the palette and defaults from chart-defaults.json without
+ * needing the JSON file at runtime - the values are inlined here.
+ */
+
+(function () {
+  'use strict';
+
+  if (typeof Chart === 'undefined') {
+    console.error('[cyntora] Chart.js not loaded.');
+    return;
+  }
+
+  var P = {
+    current:  '#1f4e4a',
+    previous: '#b9d2cf',
+    orange:   '#f7a528',
+    donut: [
+      '#4285F4', '#34A853', '#FBBC04', '#EA4335',
+      '#AB47BC', '#00ACC1', '#FF7043', '#9E9E9E',
+      '#7E57C2', '#26A69A'
+    ],
+    grid: '#eeeeee',
+    tick: '#bdbdbd',
+    axisColor: '#7a7a7a',
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+  };
+
+  var noAnim = window.matchMedia && window.matchMedia('print').matches;
+
+  Chart.defaults.font.family = P.fontFamily;
+  Chart.defaults.color = '#2c2c2c';
+  Chart.defaults.responsive = true;
+  Chart.defaults.maintainAspectRatio = false;
+  if (noAnim) Chart.defaults.animation = false;
+
+  function fmtNumber(v) {
+    if (v == null) return '';
+    if (Math.abs(v) >= 1e6) return (v / 1e6).toFixed(1) + 'M';
+    if (Math.abs(v) >= 1e3) return (v / 1e3).toFixed(1) + 'K';
+    return Math.round(v).toLocaleString('sv-SE');
+  }
+
+  function fmtCurrency(v, ccy) {
+    var symbols = { USD: '$', EUR: '€', GBP: '£', SEK: 'kr', NOK: 'kr', DKK: 'kr', CHF: 'CHF', CAD: 'C$' };
+    var s = symbols[ccy] || ccy + ' ';
+    if (Math.abs(v) >= 1e6) return s + (v / 1e6).toFixed(2) + 'M';
+    if (Math.abs(v) >= 1e3) return s + (v / 1e3).toFixed(2) + 'K';
+    return s + (Math.round(v * 100) / 100).toLocaleString('sv-SE');
+  }
+
+  function commonScales(opts) {
+    return {
+      x: {
+        grid: { display: false, drawBorder: false },
+        ticks: { color: P.axisColor, maxRotation: 0, autoSkip: true, autoSkipPadding: 12, font: { size: 11 } }
+      },
+      y: {
+        beginAtZero: !!(opts && opts.zero),
+        grid: { color: P.grid, drawBorder: false },
+        ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtNumber(v); } }
+      }
+    };
+  }
+
+  function tooltip(label_format) {
+    return {
+      backgroundColor: '#222',
+      titleFont: { size: 12, weight: '600' },
+      bodyFont: { size: 12 },
+      padding: 8,
+      callbacks: {
+        label: function (ctx) {
+          var v = ctx.parsed.y != null ? ctx.parsed.y : ctx.parsed;
+          var name = ctx.dataset.label ? ctx.dataset.label + ': ' : '';
+          return name + (label_format ? label_format(v) : fmtNumber(v));
+        }
+      }
+    };
+  }
+
+  function applyDataset(ds, color) {
+    return Object.assign({
+      borderColor: color,
+      backgroundColor: color,
+      borderWidth: 2,
+      tension: 0.35,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      pointBackgroundColor: color,
+      fill: false
+    }, ds);
+  }
+
+  // --- public ----------------------------------------------------------------
+
+  window.cyntoraLine = function (canvasId, spec) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+
+    var datasets = (spec.series || []).map(function (s, i) {
+      var color = s.color || (i === 0 ? P.current : P.previous);
+      return applyDataset({
+        label: s.label,
+        data: s.values,
+        borderColor: color,
+        backgroundColor: color,
+        borderDash: s.dashed ? [4, 4] : []
+      }, color);
+    });
+
+    var fmt = spec.format === 'currency'
+      ? function (v) { return fmtCurrency(v, spec.currency || 'SEK'); }
+      : fmtNumber;
+
+    return new Chart(canvas, {
+      type: 'line',
+      data: { labels: spec.labels, datasets: datasets },
+      options: {
+        plugins: {
+          legend: { display: spec.legend !== false, position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
+          tooltip: tooltip(fmt)
+        },
+        scales: commonScales({ zero: spec.zero !== false }),
+        elements: { line: { borderJoinStyle: 'round' } }
+      }
+    });
+  };
+
+  window.cyntoraBar = function (canvasId, spec) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+
+    var datasets = (spec.series || []).map(function (s, i) {
+      var color = s.color || (i === 0 ? P.previous : P.current);
+      return {
+        label: s.label,
+        data: s.values,
+        backgroundColor: color,
+        borderRadius: 2,
+        maxBarThickness: 18
+      };
+    });
+
+    var fmt = spec.format === 'currency'
+      ? function (v) { return fmtCurrency(v, spec.currency || 'SEK'); }
+      : fmtNumber;
+
+    return new Chart(canvas, {
+      type: 'bar',
+      data: { labels: spec.labels, datasets: datasets },
+      options: {
+        plugins: {
+          legend: { display: spec.legend === true, position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
+          tooltip: tooltip(fmt)
+        },
+        scales: commonScales({ zero: true })
+      }
+    });
+  };
+
+  window.cyntoraDonut = function (canvasId, spec) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+
+    var colors = spec.colors || P.donut;
+
+    return new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        labels: spec.labels,
+        datasets: [{
+          data: spec.values,
+          backgroundColor: spec.values.map(function (_, i) { return colors[i % colors.length]; }),
+          borderColor: '#ffffff',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: tooltip(spec.format === 'currency'
+            ? function (v) { return fmtCurrency(v, spec.currency || 'SEK'); }
+            : fmtNumber)
+        }
+      }
+    });
+  };
+
+  window.cyntoraInlineSparkline = function (canvasId, spec) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return null;
+
+    var datasets = (spec.series || []).map(function (s, i) {
+      var color = s.color || (i === 0 ? P.current : P.previous);
+      return applyDataset({
+        label: s.label,
+        data: s.values,
+        borderColor: color
+      }, color);
+    });
+
+    return new Chart(canvas, {
+      type: 'line',
+      data: { labels: spec.labels, datasets: datasets },
+      options: {
+        plugins: {
+          legend: { display: false },
+          tooltip: tooltip(fmtNumber)
+        },
+        scales: {
+          x: { display: true, grid: { display: false }, ticks: { color: P.axisColor, font: { size: 9 }, maxTicksLimit: 4 } },
+          y: { display: true, grid: { color: P.grid, drawBorder: false }, ticks: { color: P.axisColor, font: { size: 9 }, maxTicksLimit: 4 } }
+        }
+      }
+    });
+  };
+
+  // ---- utility: hydrate every <canvas data-cyntora="{...}"> on the page ----
+
+  function hydrateAll() {
+    document.querySelectorAll('canvas[data-cyntora]').forEach(function (c) {
+      try {
+        var spec = JSON.parse(c.getAttribute('data-cyntora'));
+        var fn = ({
+          line:       window.cyntoraLine,
+          bar:        window.cyntoraBar,
+          donut:      window.cyntoraDonut,
+          sparkline:  window.cyntoraInlineSparkline
+        })[spec.kind];
+        if (fn) fn(c.id, spec);
+        else console.warn('[cyntora] unknown chart kind:', spec.kind);
+      } catch (e) {
+        console.error('[cyntora] failed to hydrate chart', c.id, e);
+      }
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hydrateAll);
+  } else {
+    hydrateAll();
+  }
+})();
