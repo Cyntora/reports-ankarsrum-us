@@ -542,29 +542,82 @@ html, body {
 
 /* ---------- Responsive (mobile / tablet) ------------------------------- */
 
-/* On tablets and smaller laptops, the asymmetric icon-strip and 3-column
-   grids start to feel cramped. Drop them to two columns. */
+/* On tablets and smaller laptops, drop the asymmetric icon-strip and
+   3-column grids to a calmer 2-column layout, and make the multi-market
+   3-column grid switch to two columns. */
 @media (max-width: 980px) {
+  :root { --pad-page: 24px; }
   .card-grid--3 { grid-template-columns: repeat(2, 1fr); }
   .card-grid--asym { grid-template-columns: 1fr 1fr; }
   .card-grid--asym .card--icon { display: none; }
+  .market-grid { grid-template-columns: repeat(2, 1fr); }
+  .donut-row { grid-template-columns: 180px 1fr; gap: 16px; }
+  .chart-wrap { height: 220px; }
+  .chart-wrap--tall { height: 280px; }
 }
 
-/* On phones (~ <= iPhone Pro Max width), stack everything to a single
-   column so KPI cards, line charts, donuts and tables all fit. The
-   sticky nav stays as a dropdown - we do NOT change that to a hamburger
-   or anything else, per user instruction. */
+/* Phones (≤ iPhone Pro Max width). Stack everything to a single column,
+   keep the sticky nav as a dropdown (do NOT switch to a hamburger), and
+   shrink fonts/spacing so the report stays readable without zooming.
+   Tables overflow horizontally rather than squishing columns. */
 @media (max-width: 640px) {
-  .page { padding: 18px 14px; }
+  :root {
+    --pad-page: 16px;
+    --pad-card: 14px 14px;
+  }
+  html, body { font-size: 13px; }
+  .page { padding: 16px 14px; }
+
+  /* Cover page: tighten so the property card and FX-note fit one screen. */
+  .cover { min-height: auto; padding-top: 8vh; padding-bottom: 24px; }
+  .cover .logo { width: 160px; }
+  .cover h1 { margin: 32px 0 4px; font-size: 22px; }
+  .cover .month { font-size: 15px; }
+  .cover .intro { padding: 14px 16px; margin-top: 20px; font-size: 12.5px; }
+  .cover .footer { padding-top: 32px; }
+
+  /* Recurring page header: stack so the meta block doesn't push the logo
+     out of frame on narrow screens. */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .page-header .meta { text-align: left; font-size: 11px; }
+
+  /* Section title scales down so it doesn't dominate the screen. */
+  .section-title { font-size: 18px; margin: 20px 0 14px; gap: 8px; }
+  .section-title__icon { width: 22px; height: 22px; }
+
+  /* All grids collapse to one column. */
   .card-grid,
   .card-grid--3,
-  .card-grid--asym {
+  .card-grid--asym,
+  .market-grid {
     grid-template-columns: 1fr;
+    gap: 10px;
   }
   .card { min-height: auto; }
   .card--icon { display: none; }
+  .card__value { font-size: 24px; margin: 12px 0 4px; }
+  .card__value--big { font-size: 28px; }
 
-  /* Sticky nav stays a dropdown - just make it wrap and shrink labels. */
+  /* Donuts: stack chart over legend, no more side-by-side. */
+  .donut-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    text-align: center;
+  }
+  .donut-row .legend { text-align: left; }
+
+  /* Chart cards: shorter on mobile so multiple sections still fit a swipe. */
+  .chart-card { padding: 12px 12px 14px; }
+  .chart-wrap { height: 200px; }
+  .chart-wrap--tall  { height: 240px; }
+  .chart-wrap--short { height: 160px; }
+
+  /* Sticky nav: stack groups vertically, dropdowns full width. */
   .report-nav__inner {
     flex-direction: column;
     align-items: stretch;
@@ -572,19 +625,48 @@ html, body {
     padding: 10px 12px;
   }
   .report-nav__group { width: 100%; }
-  .report-nav select { width: 100%; }
+  .report-nav select { width: 100%; min-width: 0; }
 
-  /* Tables: allow horizontal scroll on narrow screens rather than
-     squishing every column. */
+  /* Tables: horizontal scroll instead of squashing columns. */
   .data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .data-table { min-width: 560px; }
+  .data-table { min-width: 520px; font-size: 11.5px; }
+  .data-table thead th,
+  .data-table tbody td { padding: 8px 8px; }
 
-  /* KPI value sizes shrink slightly so they don't truncate. */
-  .card__value { font-size: 28px; }
-  .band { font-size: 14px; padding: 8px 12px; }
+  /* Section bands a touch smaller. */
+  .band { font-size: 13px; padding: 8px 12px; margin: 14px 0 10px; }
 
-  /* Chart canvases shrink to their container; remove fixed mins. */
-  .chart-wrap, .chart-wrap--short, .chart-wrap--tall { min-height: 0; }
+  /* Summary + next-steps blocks: less padding, tighter type. */
+  .summary-block, .next-steps {
+    padding: 16px 18px;
+    margin: 0 0 18px;
+  }
+  .summary-block h2, .next-steps h2 { font-size: 15px; }
+  .summary-block p, .next-steps ul { font-size: 13px; line-height: 1.55; }
+
+  /* Insight takeaway under each section. */
+  .takeaway { font-size: 12px; padding: 9px 12px; }
+
+  /* Multi-market columns: when stacked, give each its own band so the
+     reader knows which market they're looking at. */
+  .market-col .band { font-size: 12.5px; padding: 7px 10px; }
+  .property-block .property-title { font-size: 16px; }
+
+  /* Trend pills: compact. */
+  .trend { font-size: 10px; padding: 1px 5px; }
+}
+
+/* Extra-small phones (~ ≤ iPhone SE / Galaxy A-series). Avoid horizontal
+   overflow on the page itself; only tables scroll. */
+@media (max-width: 380px) {
+  html, body { font-size: 12.5px; }
+  .page { padding: 12px 10px; }
+  .section-title { font-size: 16px; }
+  .card__value { font-size: 22px; }
+  .card__value--big { font-size: 26px; }
+  .chart-wrap { height: 180px; }
+  .chart-wrap--tall  { height: 220px; }
+  .chart-wrap--short { height: 140px; }
 }
 
 /* ---------- Print ------------------------------------------------------- */
