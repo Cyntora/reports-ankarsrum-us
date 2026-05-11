@@ -69,9 +69,12 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Defensive: never allow the page itself to scroll horizontally. Every
-     wide element (tables, charts) must scroll inside its own container. */
+     wide element (tables, charts) must scroll inside its own container.
+     Use `clip` instead of `hidden` so position:sticky on `.report-nav`
+     keeps working (overflow:hidden on html/body creates a scroll-container
+     in WebKit which silently breaks any sticky descendant). */
   max-width: 100%;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 /* Long strings (URL paths, campaign names with hyphens) shouldn't push
@@ -505,6 +508,88 @@ a { overflow-wrap: anywhere; word-break: break-word; }
 .card .unavailable {
   margin: 18px auto;
   align-self: center;
+}
+
+/* ---------- Multi-market grid (Ankarsrum samlad) ------------------------ */
+
+.market-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin: 8px 0 14px;
+}
+
+.market-card {
+  background: var(--c-card-bg);
+  border: 1px solid var(--c-card-border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.market-card--missing {
+  opacity: 0.55;
+  font-style: italic;
+}
+
+.market-card__name {
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--c-text);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--c-card-divider);
+  margin-bottom: 4px;
+}
+
+.market-card__kpi {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11.5px;
+  padding: 2px 0;
+}
+
+.market-card__label {
+  color: var(--c-text-muted);
+}
+
+.market-card__value {
+  font-weight: 600;
+  color: var(--c-text);
+  white-space: nowrap;
+}
+
+.market-card__delta {
+  font-size: 10px;
+  margin-left: 6px;
+  padding: 1px 4px;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.market-card__delta--up {
+  color: var(--c-up-text);
+  background: var(--c-up-bg);
+}
+
+.market-card__delta--down {
+  color: var(--c-down-text);
+  background: var(--c-down-bg);
+}
+
+.market-card__delta--flat {
+  color: var(--c-text-faint);
+}
+
+.market-card__empty {
+  font-size: 11px;
+  color: var(--c-text-muted);
+  padding: 4px 0;
 }
 
 /* ---------- "Sammanfattning av månaden" block (top of report) ----------- */
