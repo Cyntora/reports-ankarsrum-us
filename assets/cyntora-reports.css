@@ -642,6 +642,17 @@ a { overflow-wrap: anywhere; word-break: break-word; }
 }
 .next-steps li { margin-bottom: 6px; }
 
+.next-steps__uppsell {
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  background: var(--c-takeaway-bg);
+  border-left: 3px solid var(--c-takeaway-border);
+  color: var(--c-takeaway-text);
+  font-size: 13px;
+  font-style: italic;
+  border-radius: 0 3px 3px 0;
+}
+
 .next-steps--external {
   margin-top: 14px;
   background: #fcf6ec;
