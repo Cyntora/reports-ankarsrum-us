@@ -487,6 +487,16 @@ a { overflow-wrap: anywhere; word-break: break-word; }
   margin: 8px 0 16px;
 }
 
+/* Small explanatory note (e.g. why YoY is suppressed for new properties).
+   Less prominent than a takeaway — italic caption right below a table. */
+.caption-note {
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--c-text-muted);
+  margin: 8px 4px 14px;
+  line-height: 1.45;
+}
+
 /* ---------- Data unavailable callout ------------------------------------- */
 
 .unavailable {

@@ -76,6 +76,14 @@
 
   function commonScales(opts) {
     var yTickFmt = (opts && opts.yFormatter) || fmtNumber;
+    var yTicks = { color: P.axisColor, font: { size: 11 }, callback: function (v) { return yTickFmt(v); } };
+    // Integer-only metrics (orders, clicks, sessions) need stepSize=1 and
+    // precision=0 — otherwise Chart.js auto-picks fractional ticks like
+    // 0.2, 0.4, 0.6 when all values are 0 or 1.
+    if (opts && opts.integer) {
+      yTicks.stepSize = 1;
+      yTicks.precision = 0;
+    }
     return {
       x: {
         grid: { display: false, drawBorder: false },
@@ -84,7 +92,7 @@
       y: {
         beginAtZero: !!(opts && opts.zero),
         grid: { color: P.grid, drawBorder: false },
-        ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return yTickFmt(v); } }
+        ticks: yTicks
       }
     };
   }
@@ -164,13 +172,14 @@
       }
     };
 
+    var integerY = spec.integer === true;
     var scales = dualAxis
       ? {
           x: { grid: { display: false, drawBorder: false }, ticks: { color: P.axisColor, maxRotation: 0, autoSkip: true, autoSkipPadding: 12, font: { size: 11 } } },
-          y:  { position: 'left',  beginAtZero: spec.zero !== false, grid: { color: P.grid, drawBorder: false }, ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtMain(v); } } },
+          y:  { position: 'left',  beginAtZero: spec.zero !== false, grid: { color: P.grid, drawBorder: false }, ticks: Object.assign({ color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtMain(v); } }, integerY ? { stepSize: 1, precision: 0 } : {}) },
           y1: { position: 'right', beginAtZero: spec.zero !== false, grid: { display: false }, ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtRight(v); } } }
         }
-      : commonScales({ zero: spec.zero !== false, yFormatter: fmtMain });
+      : commonScales({ zero: spec.zero !== false, yFormatter: fmtMain, integer: integerY });
 
     return new Chart(canvas, {
       type: 'line',
@@ -213,7 +222,7 @@
           legend: { display: spec.legend === true, position: 'bottom', labels: { boxWidth: 8, boxHeight: 8, font: { size: 12 } } },
           tooltip: tooltip(fmt)
         },
-        scales: commonScales({ zero: true, yFormatter: fmt })
+        scales: commonScales({ zero: true, yFormatter: fmt, integer: spec.integer === true })
       }
     });
   };
