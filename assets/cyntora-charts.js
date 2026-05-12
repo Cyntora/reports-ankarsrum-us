@@ -77,11 +77,13 @@
   function commonScales(opts) {
     var yTickFmt = (opts && opts.yFormatter) || fmtNumber;
     var yTicks = { color: P.axisColor, font: { size: 11 }, callback: function (v) { return yTickFmt(v); } };
-    // Integer-only metrics (orders, clicks, sessions) need stepSize=1 and
-    // precision=0 — otherwise Chart.js auto-picks fractional ticks like
-    // 0.2, 0.4, 0.6 when all values are 0 or 1.
+    // Integer-only metrics (orders, clicks, sessions) need precision=0 —
+    // otherwise Chart.js auto-picks fractional ticks like 0.2, 0.4, 0.6
+    // when all values are 0/1. We deliberately DO NOT force stepSize=1
+    // because that would draw 16 gridlines when max=15. Chart.js's auto
+    // step-picker already picks "nice" round values (0, 5, 10, 15);
+    // precision=0 just makes those values whole numbers.
     if (opts && opts.integer) {
-      yTicks.stepSize = 1;
       yTicks.precision = 0;
     }
     return {
@@ -176,7 +178,7 @@
     var scales = dualAxis
       ? {
           x: { grid: { display: false, drawBorder: false }, ticks: { color: P.axisColor, maxRotation: 0, autoSkip: true, autoSkipPadding: 12, font: { size: 11 } } },
-          y:  { position: 'left',  beginAtZero: spec.zero !== false, grid: { color: P.grid, drawBorder: false }, ticks: Object.assign({ color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtMain(v); } }, integerY ? { stepSize: 1, precision: 0 } : {}) },
+          y:  { position: 'left',  beginAtZero: spec.zero !== false, grid: { color: P.grid, drawBorder: false }, ticks: Object.assign({ color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtMain(v); } }, integerY ? { precision: 0 } : {}) },
           y1: { position: 'right', beginAtZero: spec.zero !== false, grid: { display: false }, ticks: { color: P.axisColor, font: { size: 11 }, callback: function (v) { return fmtRight(v); } } }
         }
       : commonScales({ zero: spec.zero !== false, yFormatter: fmtMain, integer: integerY });
