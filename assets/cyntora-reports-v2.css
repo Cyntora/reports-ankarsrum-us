@@ -143,12 +143,9 @@ section.page--dark .eyebrow { color: var(--ink-muted-dark); }
   border-bottom: 1px solid var(--border-dark);
   position: relative;
 }
-.cover::after {
-  content: ""; position: absolute;
-  left: 5vw; right: 5vw; bottom: 6vh; height: 1px;
-  background: linear-gradient(90deg, var(--brass) 0%, var(--brass) 18%, transparent 18%, transparent 100%);
-  opacity: 0.8;
-}
+/* (Brass accent line removed — it overlapped the cover-notes footer
+   in multi-market reports. The cover-notes top border now carries that
+   visual separation cleanly.) */
 .cover__top { display: flex; align-items: center; justify-content: space-between; }
 .cover__top img { height: 30px; width: auto; }
 .cover__top .meta {
@@ -484,27 +481,35 @@ section.page--dark .summary-block p { color: var(--ink-on-dark); }
   letter-spacing: 0.04em; color: var(--ink-muted);
   margin-top: 12px;
 }
+/* Cover-notes: small footer-style metadata at very bottom of dark cover.
+   First N-1 items rendered as comma-separated inline credits, last item
+   (FX rates) gets its own line in slightly dimmer text. Width is full
+   content-area (the parent cover already has 5vw horizontal padding,
+   so we don't add more here — that's what was making it look offset). */
 .cover-notes {
-  list-style: none; padding: 18px 24px; margin: 0;
-  max-width: 760px;
-  background: rgba(255, 251, 244, 0.06);
-  border-top: 1px solid var(--brass);
-  font-family: var(--font-body); font-size: 12.5px;
-  line-height: 1.55; color: var(--ink-on-dark);
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 20px 0 0;
+  font-family: var(--font-body); font-size: 11.5px;
+  line-height: 1.6; color: var(--ink-muted-dark);
+  letter-spacing: 0.02em;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: left;
 }
 .cover-notes li {
-  padding: 4px 0 4px 18px; position: relative;
+  display: inline; padding: 0;
 }
-.cover-notes li::before {
-  content: ""; position: absolute; left: 0; top: 11px;
-  width: 8px; height: 1px; background: var(--brass);
+.cover-notes li::before { content: none; }
+.cover-notes li:not(:last-child)::after {
+  content: " · "; color: rgba(255, 255, 255, 0.3); margin: 0 2px;
 }
 .cover-notes li:last-child:not(:only-child) {
-  margin-top: 8px; padding-top: 10px;
-  border-top: 1px dashed rgba(255, 255, 255, 0.18);
-  color: var(--ink-muted-dark); font-size: 11.5px;
+  display: block; margin-top: 10px;
+  font-size: 10.5px; letter-spacing: 0.04em;
+  color: var(--ink-muted-dark); opacity: 0.7;
 }
-.cover-notes li:last-child:not(:only-child)::before { display: none; }
+.cover-notes li:last-child:not(:only-child)::after { content: none; }
+.cover-notes li:last-child:not(:only-child)::before { content: none; }
 
 /* ──────────────────────────── Multi-market SEM grid ──────────────────────────── */
 /* Used by Ankarsrum samlad (multi-market). Each section page renders
