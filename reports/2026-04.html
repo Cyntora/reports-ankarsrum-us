@@ -3,10 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Ankarsrum USA - Rapport april 2026</title>
+  <meta name="robots" content="noindex, nofollow">
+  <title>Ankarsrum USA — Rapport april 2026 | Cyntora</title>
   <link rel="icon" type="image/svg+xml" href="../assets/cyntora-favicon.svg">
   <link rel="apple-touch-icon" href="../assets/cyntora-favicon.svg">
-  <link rel="stylesheet" href="../assets/cyntora-reports.css">
+  <link rel="stylesheet" href="../assets/cyntora-reports-v2.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js" defer></script>
   <script src="../assets/cyntora-charts.js" defer></script>
   <script src="../assets/cyntora-reports.js" defer></script>
@@ -15,14 +16,18 @@
 
 <nav class="report-nav" data-section-nav>
   <div class="report-nav__inner">
-    <div class="report-nav__group">
-      <label for="section-jump">Sektion:</label>
-      <select id="section-jump" data-section-jump>
-        <option value="">Översikt</option>
-      </select>
+    <div class="report-nav__brand">
+      <img src="../assets/cyntora-logo.svg" alt="Cyntora">
+      <div class="divider"></div>
+      <div class="label">Ankarsrum USA</div>
     </div>
-    <div class="report-nav__group">
-      <label for="period">Period:</label>
+    <div class="report-nav__links" data-section-links></div>
+    <div class="report-nav__dropdown" data-section-dropdown-wrap>
+      <label for="section-jump">Sektion</label>
+      <select id="section-jump" data-section-jump></select>
+    </div>
+    <div class="report-nav__period">
+      <label for="period">Period</label>
       <select id="period" data-period-switcher data-current="2026-04" data-index-url="index.json" disabled>
         <option value="2026-04.html" selected>April 2026</option>
       </select>
@@ -31,35 +36,37 @@
 </nav>
 
 
-<section class="page cover">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <h1>Ankarsrum USA - Detaljerad statistik</h1>
-  <p class="month">April 2026</p>
-
-
-  <div class="footer">
-<div class="property">Ankarsrum USA - GA4</div><div class="url">ankarsrum.com/us/</div><div class="fx-note">Kurs: 1 USD = 9,26 SEK (snitt april 2026, ECB)</div>  </div>
-</section>
-<section class="page">
-<div class="page-header">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <div class="meta">
-    <div class="client">Ankarsrum USA</div>
-    <div>April 2026</div>
+<section class="cover" id="cover">
+  <div class="cover__top">
+    <img src="../assets/cyntora-logo-white.svg" alt="Cyntora">
+    <div class="meta">
+      April 2026
+· Detaljerad statistik    </div>
   </div>
-</div><div class="summary-block">
-  <h2>Sammanfattning av månaden</h2>
-  <p>April var en stark månad för Ankarsrum US med tydlig tillväxt över hela kanalmixen. Antalet användare i GA4 nästan dubblerades till 51 022 (+94 procent jämfört med april 2025) och sessionerna landade på 80 185 (+93 procent). Försäljningen via WooCommerce nådde 4,4 MSEK fördelat på 780 ordrar, en ökning med 22 procent i intäkt och 9 procent i ordervolym. Google Ads-kostnaden ökade till 29 568 SEK (+52 procent) och drev 377 spårade konverteringar (+159 procent). Avvisningsfrekvensen steg lätt till 44,3 procent och engagemangstiden minskade något jämfört med förra året.</p>
-</div></section>
-
-<section class="page">
-<div class="page-header">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <div class="meta">
-    <div class="client">Ankarsrum USA</div>
-    <div>April 2026</div>
+  <div class="cover__center">
+    <div class="cover__eyebrow">Cyntora månadsrapport</div>
+    <h1>Ankarsrum USA</h1>
+      <p class="cover__kicker">April var en stark månad för Ankarsrum US med tydlig tillväxt över hela kanalmixen. Antalet användare i GA4 nästan dubblerades till 51 022 (+94 procent jämfört med april 2025) och sessionerna landade på 80 185 (+93 procent).</p>
+<p class="cover__kicker">Försäljningen via WooCommerce nådde 4,4 MSEK fördelat på 780 ordrar, en ökning med 22 procent i intäkt och 9 procent i ordervolym. Google Ads-kostnaden ökade till 29 568 SEK (+52 procent) och drev 377 spårade konverteringar (+159 procent). Avvisningsfrekvensen steg lätt till 44,3 procent och engagemangstiden minskade något jämfört med förra året.</p>  </div>
+  <div class="cover__bottom">
+    <div class="col">
+      <div class="label">Period</div>
+      <div class="val">April 2026</div>
+    </div>
+    <div class="col">
+      <div class="label">Avtal</div>
+      <div class="val">—</div>
+    </div>
+    <div class="col">
+      <div class="label">Levererat av</div>
+      <div class="val">Cyntora</div>
+    </div>
   </div>
-</div>  <div class="section" id="section-ga4_overview" data-section-id="ga4_overview" data-section-title="Google Analytics 4">
+<div class="cover-notes-wrap"><ul class="cover-notes"><li>Kurs: 1 USD = 9,26 SEK (snitt april 2026, ECB)</li></ul></div></section>
+
+<section class="page page--paper">
+  <div class="wrap">
+    <div class="section" id="section-ga4_overview" data-section-id="ga4_overview" data-section-title="Google Analytics 4">
   <div class="section-title">
 <img class="section-title__icon" src="../assets/icons/ga4.svg" alt="">    <span>Google Analytics 4</span>
   </div>
@@ -862,15 +869,11 @@
 
 <div class="takeaway">Trafiken växer kraftigt mot förra året, främst via Direct och Organic Search, även om engagemangstiden minskar något.</div>
 </div>
+  </div>
 </section>
 <section class="page">
-<div class="page-header">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <div class="meta">
-    <div class="client">Ankarsrum USA</div>
-    <div>April 2026</div>
-  </div>
-</div>  <div class="section" id="section-gsc" data-section-id="gsc" data-section-title="Google Search Console">
+  <div class="wrap">
+    <div class="section" id="section-gsc" data-section-id="gsc" data-section-title="Google Search Console">
   <div class="section-title">
 <img class="section-title__icon" src="../assets/icons/gsc.svg" alt="">    <span>Google Search Console</span>
   </div>
@@ -879,15 +882,11 @@
     <div class="unavailable">Data ej tillgänglig för Google Search Console</div>
 
 </div>
-</section>
-<section class="page">
-<div class="page-header">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <div class="meta">
-    <div class="client">Ankarsrum USA</div>
-    <div>April 2026</div>
   </div>
-</div>  <div class="section" id="section-google_ads" data-section-id="google_ads" data-section-title="Google Ads">
+</section>
+<section class="page page--paper">
+  <div class="wrap">
+    <div class="section" id="section-google_ads" data-section-id="google_ads" data-section-title="Google Ads">
   <div class="section-title">
 <img class="section-title__icon" src="../assets/icons/google-ads.svg" alt="">    <span>Google Ads</span>
   </div>
@@ -1061,15 +1060,11 @@
 
 <div class="takeaway">Kostnad och konverteringar växer kraftigt; det spårade konverteringsvärdet (~2 MSEK) motsvarar cirka 45 procent av faktiska WooCommerce-intäkter och kan inkludera attribution-överlapp.</div>
 </div>
+  </div>
 </section>
 <section class="page">
-<div class="page-header">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <div class="meta">
-    <div class="client">Ankarsrum USA</div>
-    <div>April 2026</div>
-  </div>
-</div>  <div class="section" id="section-commerce" data-section-id="commerce" data-section-title="WooCommerce">
+  <div class="wrap">
+    <div class="section" id="section-commerce" data-section-id="commerce" data-section-title="WooCommerce">
   <div class="section-title">
 <img class="section-title__icon" src="../assets/icons/woocommerce.svg" alt="">    <span>WooCommerce</span>
   </div>
@@ -1160,15 +1155,11 @@
 
 <div class="takeaway">Försäljningen växer 22 procent och genomsnittsordern ligger på 5 670 SEK, vilket är högre än samma månad förra året.</div>
 </div>
-</section>
-<section class="page">
-<div class="page-header">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <div class="meta">
-    <div class="client">Ankarsrum USA</div>
-    <div>April 2026</div>
   </div>
-</div>  <div class="section" id="section-seranking" data-section-id="seranking" data-section-title="SE Ranking">
+</section>
+<section class="page page--paper">
+  <div class="wrap">
+    <div class="section" id="section-seranking" data-section-id="seranking" data-section-title="SE Ranking">
   <div class="section-title">
 <img class="section-title__icon" src="../assets/icons/seranking.png" alt="">    <span>SE Ranking</span>
   </div>
@@ -1582,27 +1573,19 @@
 
 
 </div>
+  </div>
 </section>
 
-<section class="page">
-<div class="page-header">
-  <img class="logo" src="../assets/cyntora-logo.svg" alt="Cyntora">
-  <div class="meta">
-    <div class="client">Ankarsrum USA</div>
-    <div>April 2026</div>
+<section class="page page--dark" id="section-next-steps" data-section-id="next-steps" data-section-title="Vad vi gör härnäst">
+  <div class="wrap">
+    <div class="eyebrow">Vad händer härnäst</div>
+    <div class="next-steps">
+      <h2>Vad vi gör härnäst</h2>
+      <ul>
+<li>Vi kommer att skala den shopping-baserade Performance Max-strukturen som driver merparten av konverteringsvolymen.</li><li>Vi optimerar de mest besökta produktkategori-sidorna för att hålla kvar de nya besökarna längre och sänka avvisningsfrekvensen.</li><li>Vi följer upp varumärkeskampanjen som har hög CTR men begränsat direkt konverteringsvärde, och justerar målgruppsinställningarna.</li><li>Vi testar nya annonsvarianter för sökkampanjerna för att lyfta CTR från nuvarande nivåer.</li><li>Vi fortsätter bevaka WooCommerce-försäljningen som är den mest tillförlitliga intäktsindikatorn.</li>      </ul>
+      <p class="next-steps__uppsell">Vill ni att vi tar hand om mer? Den höga ROAS:n på branding-kampanjen och tillväxten i organisk trafik öppnar för en dedikerad CRO-insats på produktsidorna samt utbyggd content-strategi runt de starkaste sökorden. Hör av er så går vi igenom en utökning.</p>
+    </div>
   </div>
-</div><div class="next-steps">
-  <h2>Vad vi gör härnäst</h2>
-  <ul>
-      <li>Vi kommer att skala den shopping-baserade Performance Max-strukturen som driver merparten av konverteringsvolymen.</li>
-      <li>Vi optimerar de mest besökta produktkategori-sidorna för att hålla kvar de nya besökarna längre och sänka avvisningsfrekvensen.</li>
-      <li>Vi följer upp varumärkeskampanjen som har hög CTR men begränsat direkt konverteringsvärde, och justerar målgruppsinställningarna.</li>
-      <li>Vi testar nya annonsvarianter för sökkampanjerna för att lyfta CTR från nuvarande nivåer.</li>
-      <li>Vi fortsätter bevaka WooCommerce-försäljningen som är den mest tillförlitliga intäktsindikatorn.</li>
-  </ul>
-  <p class="next-steps__uppsell">Vill ni att vi tar hand om mer? Den höga ROAS:n på branding-kampanjen och tillväxten i organisk trafik öppnar för en dedikerad CRO-insats på produktsidorna samt utbyggd content-strategi runt de starkaste sökorden. Hör av er så går vi igenom en utökning.</p>
-</div>
-
 </section>
 
 
