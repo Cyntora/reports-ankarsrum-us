@@ -597,13 +597,34 @@ section.page--dark .sem-col__cards .card__head .sub { color: var(--ink-muted-dar
 }
 section.page--dark .sem-col__unavailable { border-color: rgba(255, 255, 255, 0.14); color: var(--ink-muted-dark); }
 
-/* card-grid--3 for demographics donut row (Region/Age/Gender) */
+/* card-grid--3 for demographics donut row (Region/Age/Gender).
+   Each donut-card here is narrow (~33% of section width) so we force
+   the inner .donut-row to STACK (donut on top, legend below) regardless
+   of breakpoint — side-by-side doesn't fit the column width. */
 .card-grid--3 {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 20px;
 }
 @media (max-width: 900px) { .card-grid--3 { grid-template-columns: 1fr; } }
+.card-grid--3 .donut-row {
+  grid-template-columns: 1fr;
+  gap: 18px;
+  align-items: stretch;
+}
+.card-grid--3 .chart-wrap--short {
+  height: 200px;  /* taller when donut is alone on its row */
+}
+.card-grid--3 .legend {
+  margin-top: 8px;
+  max-width: 100%;
+}
+.card-grid--3 .legend .name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
 
 /* ──────────────────────────── Tables: always scrollable horizontally ─── */
 /* Tables can have many columns (campaigns, keywords) and at narrow widths
